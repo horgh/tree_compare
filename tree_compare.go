@@ -82,21 +82,26 @@ func findFiles(file string) ([]string, error) {
 
 	fi, err := fh.Stat()
 	if err != nil {
+		fh.Close()
 		return nil, fmt.Errorf("Unable to stat: %s: %s", file, err.Error())
 	}
 
 	var files []string
 	if fi.Mode().IsRegular() {
 		files = append(files, file)
+		fh.Close()
 		return files, nil
 	}
 
 	if fi.IsDir() {
 		names, err := fh.Readdirnames(0)
 		if err != nil {
+			fh.Close()
 			return nil, fmt.Errorf("Unable to read directory files: %s: %s", file,
 				err.Error())
 		}
+		fh.Close()
+
 		for _, name := range names {
 			absName := fmt.Sprintf("%s%c%s", file, os.PathSeparator, name)
 			subFiles, err := findFiles(absName)
@@ -130,8 +135,10 @@ func computeAndOutputChecksums(files []string, prefix string) error {
 
 		_, err = reader.WriteTo(hasher)
 		if err != nil {
+			fh.Close()
 			return err
 		}
+		fh.Close()
 
 		outputFilename := strings.TrimPrefix(filename, prefix)
 

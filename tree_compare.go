@@ -1,24 +1,20 @@
-/*
- * This program takes as input a root directory.
- *
- * For every file under this root, it generates a checksum.
- *
- * It outputs the checksum and the filename.
- *
- * You can then compare this with a run on another host to see what
- * differences there may be.
- *
- * The reason I have this is because I rsync a large directory between
- * two hosts. rsync's --checksum flag ends up leading to a timeout due to how
- * long it takes to generate the file list. I intend to run this offline
- * and then resolve whatever differences there are separately.
- */
-
+// This program takes as input a root directory.
+//
+// For every file under this root, it generates a checksum.
+//
+// It outputs the checksum and the filename.
+//
+// You can then compare this with a run on another host to see what differences
+// there may be.
+//
+// The reason I have this is because I rsync a large directory between two
+// hosts. rsync's --checksum flag ends up leading to a timeout due to how long
+// it takes to generate the file list. I intend to run this offline and then
+// resolve whatever differences there are separately.
 package main
 
 import (
 	"bufio"
-	//"crypto/sha256"
 	"crypto/md5"
 	"flag"
 	"fmt"

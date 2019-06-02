@@ -31,8 +31,7 @@ func main() {
 	flag.Parse()
 
 	if len(*dir) == 0 {
-		log.Print("You must specify a directory.")
-		flag.PrintDefaults()
+		flag.Usage()
 		os.Exit(1)
 	}
 

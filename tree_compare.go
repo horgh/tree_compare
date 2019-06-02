@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"sort"
 	"strings"
 )
@@ -92,7 +93,7 @@ func findFiles(file string) ([]string, error) {
 		_ = fh.Close()
 
 		for _, name := range names {
-			absName := fmt.Sprintf("%s%c%s", file, os.PathSeparator, name)
+			absName := filepath.Join(file, name)
 			subFiles, err := findFiles(absName)
 			if err != nil {
 				return nil, err

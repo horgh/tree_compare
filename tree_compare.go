@@ -35,9 +35,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	err := runChecks(*dir)
-	if err != nil {
-		log.Printf(err.Error())
+	if err := runChecks(*dir); err != nil {
+		log.Print(err.Error())
 		os.Exit(1)
 	}
 }
@@ -51,16 +50,10 @@ func runChecks(dir string) error {
 		return err
 	}
 
-	// Sort them.
 	sort.Strings(files)
 
 	// Compute and output checksums.
-	err = computeAndOutputChecksums(files, dir)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return computeAndOutputChecksums(files, dir)
 }
 
 // findFiles recursively descends a directory tree and collects all regular
@@ -78,25 +71,25 @@ func findFiles(file string) ([]string, error) {
 
 	fi, err := fh.Stat()
 	if err != nil {
-		fh.Close()
+		_ = fh.Close()
 		return nil, fmt.Errorf("Unable to stat: %s: %s", file, err.Error())
 	}
 
 	var files []string
 	if fi.Mode().IsRegular() {
 		files = append(files, file)
-		fh.Close()
+		_ = fh.Close()
 		return files, nil
 	}
 
 	if fi.IsDir() {
 		names, err := fh.Readdirnames(0)
 		if err != nil {
-			fh.Close()
+			_ = fh.Close()
 			return nil, fmt.Errorf("Unable to read directory files: %s: %s", file,
 				err.Error())
 		}
-		fh.Close()
+		_ = fh.Close()
 
 		for _, name := range names {
 			absName := fmt.Sprintf("%s%c%s", file, os.PathSeparator, name)
@@ -129,12 +122,11 @@ func computeAndOutputChecksums(files []string, prefix string) error {
 
 		hasher := md5.New()
 
-		_, err = reader.WriteTo(hasher)
-		if err != nil {
-			fh.Close()
+		if _, err = reader.WriteTo(hasher); err != nil {
+			_ = fh.Close()
 			return err
 		}
-		fh.Close()
+		_ = fh.Close()
 
 		outputFilename := strings.TrimPrefix(filename, prefix)
 

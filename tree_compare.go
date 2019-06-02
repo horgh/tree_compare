@@ -66,13 +66,13 @@ func findFiles(file string) ([]string, error) {
 
 	fh, err := os.Open(file)
 	if err != nil {
-		return nil, fmt.Errorf("Unable to open: %s: %s", file, err.Error())
+		return nil, fmt.Errorf("unable to open: %s: %s", file, err.Error())
 	}
 
 	fi, err := fh.Stat()
 	if err != nil {
 		_ = fh.Close()
-		return nil, fmt.Errorf("Unable to stat: %s: %s", file, err.Error())
+		return nil, fmt.Errorf("unable to stat: %s: %s", file, err.Error())
 	}
 
 	var files []string
@@ -86,7 +86,7 @@ func findFiles(file string) ([]string, error) {
 		names, err := fh.Readdirnames(0)
 		if err != nil {
 			_ = fh.Close()
-			return nil, fmt.Errorf("Unable to read directory files: %s: %s", file,
+			return nil, fmt.Errorf("unable to read directory files: %s: %s", file,
 				err.Error())
 		}
 		_ = fh.Close()
